@@ -19,8 +19,8 @@ export interface SessionInfo {
   slug: string | null;
   /** User-set title via /rename, if any */
   customTitle: string | null;
-  /** First user message content, truncated */
-  firstPrompt: string | null;
+  /** Last user message content, truncated */
+  lastPrompt: string | null;
   firstTimestamp: string | null;
   lastTimestamp: string | null;
   gitBranch: string | null;
@@ -95,7 +95,7 @@ export interface SessionsIndexEntry {
   sessionId: string;
   fullPath: string;
   fileMtime: number;
-  firstPrompt?: string;
+  lastPrompt?: string;
   summary?: string;
   messageCount?: number;
   created?: string;
@@ -117,7 +117,7 @@ export interface ActiveSession {
 export interface SessionParseResult {
   slug: string | null;
   customTitle: string | null;
-  firstPrompt: string | null;
+  lastPrompt: string | null;
   firstTimestamp: string | null;
   lastTimestamp: string | null;
   gitBranch: string | null;

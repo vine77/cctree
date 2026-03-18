@@ -122,7 +122,7 @@ export async function scan(options?: ScanOptions): Promise<ProjectInfo[]> {
           name: displayName,
           slug: parsed.slug,
           customTitle: parsed.customTitle,
-          firstPrompt: parsed.firstPrompt,
+          lastPrompt: parsed.lastPrompt,
           firstTimestamp: parsed.firstTimestamp,
           lastTimestamp: parsed.lastTimestamp,
           gitBranch: parsed.gitBranch,
@@ -159,10 +159,10 @@ export async function scan(options?: ScanOptions): Promise<ProjectInfo[]> {
 
         sessions.push({
           id: dirName,
-          name: indexed?.firstPrompt?.slice(0, 40) ?? dirName.slice(0, 8),
+          name: indexed?.lastPrompt?.slice(0, 40) ?? dirName.slice(0, 8),
           slug: null,
           customTitle: null,
-          firstPrompt: indexed?.firstPrompt ?? null,
+          lastPrompt: indexed?.lastPrompt ?? null,
           firstTimestamp: indexed?.created ?? null,
           lastTimestamp: indexed?.modified ?? null,
           gitBranch: indexed?.gitBranch ?? null,
