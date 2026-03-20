@@ -10,7 +10,7 @@ export async function parseSession(
   const result: SessionParseResult = {
     slug: null,
     customTitle: null,
-    firstPrompt: null,
+    lastPrompt: null,
     firstTimestamp: null,
     lastTimestamp: null,
     gitBranch: null,
@@ -50,7 +50,7 @@ export async function parseSession(
         if (entry.isCompactSummary) break;
         if (entry.toolUseResult) break;
         result.userMessageCount++;
-        if (!result.firstPrompt) {
+        {
           const content = entry.message?.content;
           let raw: string | null = null;
           if (typeof content === 'string') {
@@ -64,7 +64,7 @@ export async function parseSession(
           if (raw) {
             // Strip XML tags (e.g. <local-command-caveat>...</local-command-caveat>)
             const cleaned = raw.replace(/<[^>]+>/g, '').trim();
-            if (cleaned) result.firstPrompt = cleaned.slice(0, 200);
+            if (cleaned) result.lastPrompt = cleaned.slice(0, 200);
           }
         }
         break;

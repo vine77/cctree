@@ -119,11 +119,11 @@ function formatSession(
   lines.push(color(c.dim, continuation) + stats.join(' · '));
 
   // Line 4: first prompt (truncated)
-  if (session.firstPrompt) {
+  if (session.lastPrompt) {
     const truncated =
-      session.firstPrompt.length > 80
-        ? session.firstPrompt.slice(0, 77) + '...'
-        : session.firstPrompt;
+      session.lastPrompt.length > 80
+        ? session.lastPrompt.slice(0, 77) + '...'
+        : session.lastPrompt;
     // Replace newlines with spaces for display
     const oneline = truncated.replace(/\n/g, ' ');
     lines.push(
