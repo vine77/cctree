@@ -1,9 +1,13 @@
 import { readdir, readFile, stat } from 'node:fs/promises';
 import { join } from 'node:path';
 import { homedir } from 'node:os';
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
 import { loadConfig, resolveDirectory } from './config.js';
 import { getActiveSessions } from './active.js';
 import { parseSession } from './parser.js';
+
+const execFileAsync = promisify(execFile);
 import type {
   ProjectInfo,
   SessionInfo,
@@ -208,12 +212,21 @@ export async function scan(options?: ScanOptions): Promise<ProjectInfo[]> {
     // Get lastCost from config
     const meta = directory ? projectMeta.get(directory) : undefined;
 
+    // Get git info
+    const { gitRemote, currentBranch } = await getGitInfo(directory);
+
+    // Display name: last segment of directory, or raw slug
+    const name = directory ? directory.split('/').pop()! : slug;
+
     const lastActive =
       sessions.length > 0 ? sessions[0].lastTimestamp : null;
 
     projects.push({
+      name,
       slug,
       directory,
+      gitRemote,
+      currentBranch,
       sessions,
       lastActive,
       lastCost: meta?.lastCost ?? null,
@@ -283,4 +296,37 @@ async function loadSessionsIndex(
     // no index available
   }
   return map;
+}
+
+async function getGitInfo(
+  directory: string | null,
+): Promise<{ gitRemote: string | null; currentBranch: string | null }> {
+  if (!directory) return { gitRemote: null, currentBranch: null };
+
+  let gitRemote: string | null = null;
+  let currentBranch: string | null = null;
+
+  try {
+    const { stdout } = await execFileAsync(
+      'git',
+      ['-C', directory, 'remote', 'get-url', 'origin'],
+      { timeout: 3000 },
+    );
+    gitRemote = stdout.trim() || null;
+  } catch {
+    // not a git repo or no origin remote
+  }
+
+  try {
+    const { stdout } = await execFileAsync(
+      'git',
+      ['-C', directory, 'branch', '--show-current'],
+      { timeout: 3000 },
+    );
+    currentBranch = stdout.trim() || null;
+  } catch {
+    // not a git repo
+  }
+
+  return { gitRemote, currentBranch };
 }
