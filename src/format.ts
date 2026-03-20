@@ -27,11 +27,8 @@ export function formatTree(projects: ProjectInfo[]): string {
     const dirLabel = project.directory
       ? ` (${project.directory})`
       : '';
-    const shortSlug = project.directory
-      ? project.directory.split('/').pop()!
-      : project.slug;
     lines.push(
-      color(c.bold, `📁 ${shortSlug}`) + color(c.dim, dirLabel),
+      color(c.bold, `📁 ${project.name}`) + color(c.dim, dirLabel),
     );
 
     const sessionCount = project.sessions.length;

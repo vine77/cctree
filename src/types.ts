@@ -1,8 +1,14 @@
 export interface ProjectInfo {
+  /** Display name — last segment of directory path, or raw slug if unresolved */
+  name: string;
   /** Raw path-slug from filesystem (e.g. "-Users-ward-src-myapp") */
   slug: string;
   /** Resolved real directory path, or null if lookup failed */
   directory: string | null;
+  /** Git remote URL (origin), or null if not a git repo */
+  gitRemote: string | null;
+  /** Current git branch, or null if not a git repo */
+  currentBranch: string | null;
   sessions: SessionInfo[];
   /** ISO timestamp of most recent activity across all sessions */
   lastActive: string | null;
