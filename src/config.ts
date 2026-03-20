@@ -32,7 +32,7 @@ export async function loadConfig(claudeDir?: string): Promise<ConfigResult> {
 
   if (config.projects) {
     for (const [realPath, meta] of Object.entries(config.projects)) {
-      const slug = realPath.replaceAll('/', '-');
+      const slug = realPath.replaceAll('.', '-').replaceAll('/', '-');
       slugToDir.set(slug, realPath);
       projectMeta.set(realPath, { lastCost: meta.lastCost });
     }
